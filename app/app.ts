@@ -1,49 +1,41 @@
+import fs from 'fs';
 import { GildedRose } from './gilded-rose';
+import { fetchAnswer } from './services/yesno-api';
+import { LOG_FILE_NAME } from './utils/constants/files-locations';
+import { WRONG_ARGUMENTS_MSG } from './utils/constants/messages';
 import { mockedItems } from './utils/data/items';
+import { getCmdLineArguments } from './utils/utils';
 
-const isCmdLineArgumentsValid = (cmdLineArgs: string[]): boolean => {
-  const args = cmdLineArgs.slice(2);
+const makeAPICalls = (apiCallTimes: number): Promise<string[]> =>
+  Promise.all([...Array(apiCallTimes)].map(async () => await fetchAnswer()));
 
-  if (args.length != 2) {
-    return false;
+const getPositiveAnswersCount = (answers: string[]) => answers.filter(answer => answer === 'yes').length;
+
+const makeCycleOfApiCalls = async (apiCallTimes: number) => {
+  if (apiCallTimes === 0) {
+    return;
   }
+  const positiveAnswers = getPositiveAnswersCount(await makeAPICalls(apiCallTimes));
 
-  const updateTimes = +args[0];
-  const apiCallTimes = +args[1];
+  fs.appendFileSync(LOG_FILE_NAME, positiveAnswers.toString() + '\n');
 
-  return !(isNaN(updateTimes) || isNaN(apiCallTimes)) ;
+  await makeCycleOfApiCalls(positiveAnswers);
 };
 
-const getCmdLineArguments = (cmdLineArgs: string[]): { updateTimes: number, apiCallTimes: number } => {
-  if (!isCmdLineArgumentsValid(cmdLineArgs)) {
-    return { updateTimes: -1, apiCallTimes: -1 };
-  }
-  const args = cmdLineArgs.slice(2);
-
-  const updateTimes = +args[0];
-  const apiCallTimes = +args[1];
-
-  return { updateTimes, apiCallTimes };
-};
-
-const main = () => {
+const main = async () => {
   const { updateTimes, apiCallTimes } = getCmdLineArguments(process.argv);
 
   if (updateTimes == -1 || apiCallTimes == -1) {
-    console.log('This process should be called with two arguments, both need to be positive number');
+    console.log(WRONG_ARGUMENTS_MSG);
     process.exit(1);
   }
+
+  fs.unlinkSync(LOG_FILE_NAME);
 
   const gildedRose = new GildedRose(mockedItems);
 
   for (let i = 0; i < updateTimes; i++) {
-    console.log('-------- day ' + i + ' --------');
-    console.log('name, sellIn, quality');
-    mockedItems.forEach(element => {
-      console.log(element.name + ' ' + element.sellIn + ' ' + element.quality);
-
-    });
-    console.log();
+    await makeCycleOfApiCalls(apiCallTimes);
     gildedRose.updateQuality();
   }
 
