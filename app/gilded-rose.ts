@@ -1,4 +1,4 @@
-import { BACKSTAGE_PASS, BRIE, SULFURAS } from './utils/constants/items';
+import { BACKSTAGE_PASS, BRIE, CONJURED, SULFURAS } from './utils/constants/items';
 
 export class Item {
     name: string;
@@ -41,6 +41,9 @@ export class GildedRose {
                 } else {
                     qualityChange = -item.quality; //sets quality to zero
                 }
+                break;
+            case CONJURED:
+                qualityChange *= 2;
                 break;
             }
 
