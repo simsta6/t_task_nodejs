@@ -1,4 +1,4 @@
-import { BACKSTAGE_PASS, BRIE, CONJURED, SULFURAS } from './utils/constants/items';
+import { ITEMS} from './utils/constants';
 
 export class Item {
   name: string;
@@ -26,12 +26,12 @@ export class GildedRose {
 
       // Special cases
       switch (item.name) {
-      case SULFURAS:
+      case ITEMS.SULFURAS: // Sulfuras's properties never changes
         return;
-      case BRIE:
+      case ITEMS.BRIE:
         qualityChange = item.sellIn > 0 ? 1 : 2;
         break;
-      case BACKSTAGE_PASS:
+      case ITEMS.BACKSTAGE_PASS:
         if (item.sellIn > 10) {
           qualityChange = 1;
         } else if (item.sellIn > 5 && item.sellIn < 11) {
@@ -42,7 +42,7 @@ export class GildedRose {
           qualityChange = -item.quality; //sets quality to zero
         }
         break;
-      case CONJURED:
+      case ITEMS.CONJURED:
         qualityChange *= 2;
         break;
       }
