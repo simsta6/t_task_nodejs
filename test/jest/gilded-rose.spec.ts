@@ -15,7 +15,8 @@ describe('updateQuality', () => {
       const { name, sellIn, quality, sellInAfter, qualityAfter } = item;
       const gildedRose = new GildedRose([new Item(name, sellIn, quality)]);
 
-      [...Array(item.daysToUpdate)].forEach(() => gildedRose.updateQuality());
+      for (let i = 0; i < item.daysToUpdate; i++)
+        gildedRose.updateQuality();
 
       const items = gildedRose.items;
       expect(items[0].name).toBe(name);

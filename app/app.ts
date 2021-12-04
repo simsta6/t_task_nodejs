@@ -32,7 +32,7 @@ const main = () => {
 
   const gildedRose = new GildedRose(mockedItems);
 
-  [...Array(updateTimes)].forEach((_, i) => {
+  for (let i = 0; i < updateTimes; i++) {
     console.log('-------- day ' + i + ' --------');
     console.log('name, sellIn, quality');
     mockedItems.forEach(element => {
@@ -41,7 +41,7 @@ const main = () => {
     });
     console.log();
     gildedRose.updateQuality();
-  });
+  }
 
 };
 
