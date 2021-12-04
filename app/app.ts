@@ -6,7 +6,7 @@ import { mockedItems } from './data/items';
 import { getCmdLineArguments } from './utils/utils';
 
 const makeCycleOfApiCalls = async (apiCallTimes: number) => {
-  if (apiCallTimes) {
+  if (!apiCallTimes) {
     return;
   }
 
