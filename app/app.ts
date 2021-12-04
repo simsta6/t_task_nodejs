@@ -16,19 +16,23 @@ const isCmdLineArgumentsValid = (cmdLineArgs: string[]): boolean => {
 
 const getCmdLineArguments = (cmdLineArgs: string[]): { updateTimes: number, apiCallTimes: number } => {
   if (!isCmdLineArgumentsValid(cmdLineArgs)) {
-    console.log('This process should be called with two arguments, both need to be number');
-    process.exit(1);
+    return { updateTimes: -1, apiCallTimes: -1 };
   }
   const args = cmdLineArgs.slice(2);
 
   const updateTimes = +args[0];
   const apiCallTimes = +args[1];
 
-  return { updateTimes, apiCallTimes};
+  return { updateTimes, apiCallTimes };
 };
 
 const main = () => {
-  const { updateTimes, apiCallTimes } = getCmdLineArguments();
+  const { updateTimes, apiCallTimes } = getCmdLineArguments(process.argv);
+
+  if (updateTimes == -1 || apiCallTimes == -1) {
+    console.log('This process should be called with two arguments, both need to be positive number');
+    process.exit(1);
+  }
 
   const gildedRose = new GildedRose(mockedItems);
 
