@@ -33,11 +33,19 @@ describe('updateQuality', () => {
     { name: SULFURAS, sellIn: -1, quality:  80, daysToUpdate:  5, sellInAfter: -1, qualityAfter: 80 },
   ];
 
+  const defaultTestData = [
+    { name: 'Default', sellIn:  5, quality: 20, daysToUpdate:  5, sellInAfter:  0, qualityAfter: 15 }, //  sellIn is positive
+    { name: 'Default', sellIn:  0, quality:  5, daysToUpdate:  5, sellInAfter: -5, qualityAfter:  0 }, //  sellIn is negative
+    { name: 'Default', sellIn:  5, quality:  5, daysToUpdate: 10, sellInAfter: -5, qualityAfter:  0 }, //  sellIn is positive but becomes negative
+    { name: 'Default', sellIn:  1, quality:  0, daysToUpdate:  1, sellInAfter:  0, qualityAfter:  0 }, //  quality < 0
+  ];
+
   [
     ...sulfurasTestData,
     ...brieTestData,
     ...conjuredTestData,
-    ...backstageTestData
+    ...backstageTestData,
+    ...defaultTestData
   ].forEach(item =>
     it(`it should update ${item.name} item quality to ${item.qualityAfter} and sellIn to ${item.sellIn}`, () => {
       const { name, sellIn, quality, sellInAfter, qualityAfter } = item;
