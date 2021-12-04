@@ -12,15 +12,6 @@ export class Item {
     }
 }
 
-const fixItemQuality = (item: Item) => {
-    if (item.quality > 50) {
-        item.quality = 50;
-    } else if (item.quality < 0) {
-        item.quality = 0;
-    }
-    return item;
-};
-
 export class GildedRose {
     items: Array<Item>;
 
@@ -30,34 +21,37 @@ export class GildedRose {
 
     updateQuality() {
         this.items.forEach(item => {
+            // default value for item quality change over time
+            let qualityChange = item.sellIn > 0 ? -1 : -2;
+
+            // Special cases
             switch(item.name) {
+            case SULFURAS:
+                return;
             case BRIE:
-                item.quality += item.sellIn > 0 ? 1 : 2;
-                item = fixItemQuality(item);
+                qualityChange = item.sellIn > 0 ? 1 : 2;
                 break;
             case BACKSTAGE_PASS:
                 if (item.sellIn > 10) {
-                    item.quality += 1;
+                    qualityChange = 1;
                 } else if (item.sellIn > 5 && item.sellIn < 11) {
-                    item.quality += 2;
+                    qualityChange = 2;
                 } else if (item.sellIn > 0 && item.sellIn < 6) {
-                    item.quality += 3;
+                    qualityChange = 3;
                 } else {
-                    item.quality = 0;
+                    qualityChange = -item.quality; //sets quality to zero
                 }
-                item = fixItemQuality(item);
-                break;
-            case SULFURAS:
-                break;
-            default:
-                item.quality -= item.sellIn > 0 ? 1 : 2;
-                item = fixItemQuality(item);
                 break;
             }
 
-            if (item.name != SULFURAS) {
-                item.sellIn = item.sellIn - 1;
+            item.quality += qualityChange;
+            if (item.quality > 50) {
+                item.quality = 50;
+            } else if (item.quality < 0) {
+                item.quality = 0;
             }
+
+            item.sellIn -= 1;
         });
 
         return this.items;
