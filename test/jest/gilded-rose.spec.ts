@@ -1,7 +1,7 @@
 import { Item, GildedRose } from '@/gilded-rose';
 import {
   sulfurasTestData, brieTestData, conjuredTestData, backstageTestData, defaultTestData
-} from './data/gilded-rose-data';
+} from './data/gilded-rose';
 
 describe('updateQuality', () => {
   [
