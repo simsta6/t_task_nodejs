@@ -1,7 +1,7 @@
 const isCmdLineArgumentsValid = (cmdLineArgs: Array<string>): boolean => {
   const args = cmdLineArgs.slice(2);
 
-  if (args.length != 2) {
+  if (args.length !== 2) {
     return false;
   }
 
